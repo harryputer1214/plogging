@@ -23,7 +23,10 @@
 
 #저장
 #   cd /workspaces/plogging
-#
+#   git add .
+#   git commit -m "작업 내용 설명"
+#   git push
+
 
 
 
