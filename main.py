@@ -1,3 +1,31 @@
+#Codespace 쓸 때#
+
+#VNC
+#   vncserver :1
+#   ~/.local/bin/websockify --web ./ 6080 localhost:5901
+#   2개 입력후 브라우저에서 접속    https://fictional-space-engine-4j7gg4p7g5xfjr5r-6080.app.github.dev/vnc.html
+
+#VNC안 터미널에서 
+#   sudo apt-get update
+#   sudo apt-get install -y pulseaudio
+#   pulseaudio --start
+#   cd ~/workspaces/plogging
+#   python3 main.py
+
+#가상 오디오
+#   pulseaudio --start
+
+#   https://github.com/codespaces?repository_id=994197085
+#들어가서 'Stop codespace'하고 마치기
+
+#python프로그램 종료 시
+#  터미널에서    'Ctrl + C'
+
+#저장
+#   cd /workspaces/plogging
+#
+
+
 
 import pygame #pygame 불러오기
 import webbrowser
@@ -31,7 +59,7 @@ hscore_list=f.readline().split()
 f.close()
 high_score = int(hscore_list[0])
 
-pygame.mixer.init()
+pygame.mixer.init() 
 pygame.mixer.music.load(m_name_list[music_number])
 pygame.init()
 pygame.display.set_icon(display_icon)

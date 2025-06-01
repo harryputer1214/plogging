@@ -1,0 +1,6 @@
+#VNC안 터미널에서 
+#   sudo apt-get update
+#   sudo apt-get install -y pulseaudio
+#   pulseaudio --start
+#   cd ~/workspaces/plogging
+#   python3 main.py
