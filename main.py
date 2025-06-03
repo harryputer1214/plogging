@@ -1,4 +1,4 @@
-#Codespace 쓸 때#
+                                                                                                                                                                                                                            #Codespace 쓸 때#
 
 #VNC
 #   vncserver :1
@@ -41,9 +41,9 @@ from datetime import datetime
 
 #초기화
 timer = Timer()
-m_time_list = [23, 18, 24, 14, 20]
-m_name_list = ['1.mp3', '2.mp3', '3.mp3', '4.mp3', '5.mp3']
-music_number = random.randrange(0, 4)
+m_time_list = [74, 103, 79, 79, 72, 76, 73, 69] #음악 시간 설정
+m_name_list = ['Climbing High (1).mp3', 'Climbing High.mp3', 'Ocean Quest (1).mp3', 'Ocean Quest.mp3', 'Play the Game (1).mp3', 'Play the Game.mp3', 'The Game of Joy (1).mp3', 'The Game of Joy.mp3']
+music_number = random.randrange(0, 7)
 music_time = m_time_list[music_number]
 display_icon = pygame.image.load("ico.ico") 
 width, height = 680, 480 
@@ -122,8 +122,7 @@ timer.restart()
 #메뉴 함수
 def main_menu():      
     global music_time
-    global music_number
-    pygame.mixer.music.stop()                 
+    global music_number              
     title = "Plogging - Main Menu"
     pygame.display.set_caption(title)
     while True:
@@ -133,7 +132,8 @@ def main_menu():
             music_number = random.randrange(0, 4)
             music_time = m_time_list[music_number]
             pygame.mixer.init()
-            pygame.mixer.music.stop()
+            pygame.mixer.music.load(m_name_list[music_number])
+            pygame.mixer.music.play()
         screen.blit(menu_bg, (0, 0))
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
@@ -345,7 +345,6 @@ def gameover():
     
     global music_time
     global music_number
-    pygame.mixer.music.play()
     over_back_button = Button(
         image=pygame.image.load("start-btn.png").convert_alpha(),
         pos=(340, 400),
