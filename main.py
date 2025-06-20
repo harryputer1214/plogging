@@ -73,9 +73,9 @@ print(high_score)
 
 #get font함수
 def get_font(size): 
-    return pygame.font.Font("font.ttf", size)
+    return pygame.font.Font("font.en.ttf", size)
 def get_font_s(size): 
-    return pygame.font.Font("font_.ttf", size)
+    return pygame.font.Font("font.ko.ttf", size)
 
 #obj 클래스설정
 class obj:
@@ -142,7 +142,7 @@ def main_menu():
             image=pygame.image.load("start-btn.png").convert_alpha(),
             pos=(340, 200),
             text_input="PLAY",
-            font=get_font(20),
+            font=get_font(24),
             base_color="#d7fcd4",
             hovering_color="White",
             size=(120, 40))
@@ -150,7 +150,7 @@ def main_menu():
             image=pygame.image.load("start-btn.png").convert_alpha(),
             pos=(340, 300),
             text_input="TUTORIAL",
-            font=get_font(15),
+            font=get_font(19),
             base_color="#d7fcd4",
             hovering_color="White",
             size=(120, 40))
@@ -158,7 +158,7 @@ def main_menu():
             image=pygame.image.load("start-btn.png").convert_alpha(),
             pos=(340, 400),
             text_input="QUIT",
-            font=get_font(20),
+            font=get_font(24),
             base_color="#d7fcd4",
             hovering_color="White",
             size=(120, 40))
@@ -196,7 +196,6 @@ def main_menu():
 def play():
     global music_time
     global music_number
-    pygame.mixer.music.play()
     global score
     global t_list
     global high_score
@@ -207,7 +206,7 @@ def play():
         image=pygame.image.load("start-btn.png").convert_alpha(),
         pos=(70, 40),
         text_input="BACK",
-        font=get_font(20),
+        font=get_font(24),
         base_color="White",
         hovering_color="Green",
         size=(120, 40))
@@ -300,7 +299,7 @@ def play():
 
         screen.fill((0, 0, 0))
         screen.blit(background, (0, 0))
-        font = get_font(15)
+        font = get_font(24)
         score_text = font.render("SCORE : {}".format(score), False, (0, 0, 0))
         time_text = font.render("TIME : {}".format(ttime), False, (0, 0, 0))
         screen.blit(score_text, (503, 20))
@@ -349,7 +348,7 @@ def gameover():
         image=pygame.image.load("start-btn.png").convert_alpha(),
         pos=(340, 400),
         text_input="BACK",
-        font=get_font(30),
+        font=get_font(34),
         base_color="White",
         hovering_color="Green",
         size=(240, 80))
@@ -377,8 +376,8 @@ def gameover():
         com = "조금만 더 힘을 내요! 아직 해변 정리에는 부족해요. 계속 도전하세요!"
 
     if (random.random() > 0.99):
-        rank = "♣"
-        com = "당신은 스페셜 랭크에 당첨 되었습니다@.@'''"
+        rank = "★"
+        com = "당신은 스페셜 랭크에 당첨 되었습니다!! 축하합니다!" 
 
     while True:
         timert = timer.get_time()
@@ -391,9 +390,9 @@ def gameover():
             pygame.mixer.music.play()
         over_mouse_pos = pygame.mouse.get_pos()
         screen.blit(obg, (0, 0))
-        font_big = get_font(75)
+        font_big = get_font(79)
         font_small = get_font_s(20)
-        font = get_font(35)
+        font = get_font(39)
         rank_t = font_big.render("{}".format(rank), False, (0, 0, 0))
         screen.blit(rank_t, (425, 50))
         score_t = font.render("{}".format(score), False, (0, 0, 0))
