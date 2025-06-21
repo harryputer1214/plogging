@@ -43,10 +43,10 @@ from datetime import datetime
 timer = Timer()
 m_time_list = [74, 103, 79, 79, 72, 76, 73, 69] #음악 시간 설정
 m_name_list = ['Climbing High (1).mp3', 'Climbing High.mp3', 'Ocean Quest (1).mp3', 'Ocean Quest.mp3', 'Play the Game (1).mp3', 'Play the Game.mp3', 'The Game of Joy (1).mp3', 'The Game of Joy.mp3']
-music_number = random.randrange(0, 7)
+music_number = random.randrange(0, 8)
 music_time = m_time_list[music_number]
 display_icon = pygame.image.load("ico.ico") 
-width, height = 680, 480 
+width, height = 680, 480
 screen = pygame.display.set_mode((width, height)) 
 background = pygame.image.load("background.png").convert_alpha() 
 menu_bg = pygame.image.load("menu_bg.png").convert_alpha() 
@@ -129,7 +129,7 @@ def main_menu():
         timert = timer.get_time()
         if music_time <= timert:
             timer.restart()
-            music_number = random.randrange(0, 4)
+            music_number = random.randrange(0, 8)
             music_time = m_time_list[music_number]
             pygame.mixer.init()
             pygame.mixer.music.load(m_name_list[music_number])
@@ -150,7 +150,7 @@ def main_menu():
             image=pygame.image.load("start-btn.png").convert_alpha(),
             pos=(340, 300),
             text_input="TUTORIAL",
-            font=get_font(19),
+            font=get_font(20),
             base_color="#d7fcd4",
             hovering_color="White",
             size=(120, 40))
@@ -223,7 +223,7 @@ def play():
         timert = timer.get_time()
         if music_time <= timert:
             timer.restart()
-            music_number = random.randrange(0, 4)
+            music_number = random.randrange(0, 8)
             music_time = m_time_list[music_number]
             pygame.mixer.init()
             pygame.mixer.music.load(m_name_list[music_number])
@@ -383,7 +383,7 @@ def gameover():
         timert = timer.get_time()
         if music_time <= timert:
             timer.restart()
-            music_number = random.randrange(0, 4)
+            music_number = random.randrange(0, 8)
             music_time = m_time_list[music_number]
             pygame.mixer.init()
             pygame.mixer.music.load(m_name_list[music_number])
