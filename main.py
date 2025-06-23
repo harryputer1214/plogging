@@ -46,7 +46,7 @@ m_name_list = ['Climbing High (1).mp3', 'Climbing High.mp3', 'Ocean Quest (1).mp
 music_number = random.randrange(0, 8)
 music_time = m_time_list[music_number]
 display_icon = pygame.image.load("ico.ico") 
-width, height = 680, 480
+width, height = 1280, 720
 screen = pygame.display.set_mode((width, height)) 
 background = pygame.image.load("background.png").convert_alpha() 
 menu_bg = pygame.image.load("menu_bg.png").convert_alpha() 
@@ -140,28 +140,28 @@ def main_menu():
 
         PLAY_BUTTON = Button(
             image=pygame.image.load("start-btn.png").convert_alpha(),
-            pos=(340, 200),
+            pos=(640, 350),
             text_input="PLAY",
-            font=get_font(24),
+            font=get_font(50),
             base_color="#d7fcd4",
             hovering_color="White",
-            size=(120, 40))
+            size=(350, 70))
         TUTORIAL_BUTTON = Button(
             image=pygame.image.load("start-btn.png").convert_alpha(),
-            pos=(340, 300),
+            pos=(640, 450),
             text_input="TUTORIAL",
-            font=get_font(20),
+            font=get_font(45),
             base_color="#d7fcd4",
             hovering_color="White",
-            size=(120, 40))
+            size=(350, 70))
         QUIT_BUTTON = Button(
             image=pygame.image.load("start-btn.png").convert_alpha(),
-            pos=(340, 400),
+            pos=(640, 550),
             text_input="QUIT",
-            font=get_font(24),
+            font=get_font(50),
             base_color="#d7fcd4",
             hovering_color="White",
-            size=(120, 40))
+            size=(350, 70))
 
         title_img = pygame.image.load("title.png").convert_alpha()
         screen.blit(title_img, (340-120, 5))
