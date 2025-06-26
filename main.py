@@ -1,35 +1,3 @@
-                                                                                                                                                                                                                            #Codespace 쓸 때#
-
-#VNC
-#   vncserver :1
-#   ~/.local/bin/websockify --web ./ 6080 localhost:5901
-#   2개 입력후 브라우저에서 접속    https://fictional-space-engine-4j7gg4p7g5xfjr5r-6080.app.github.dev/vnc.html
-
-#VNC안 터미널에서 
-#   sudo apt-get update
-#   sudo apt-get install -y pulseaudio
-#   pulseaudio --start
-#   cd ~/workspaces/plogging
-#   python3 main.py
-
-#가상 오디오
-#   pulseaudio --start
-
-#   https://github.com/codespaces?repository_id=994197085
-#들어가서 'Stop codespace'하고 마치기
-
-#python프로그램 종료 시
-#  터미널에서    'Ctrl + C'
-
-#저장
-#   cd /workspaces/plogging
-#   git add .
-#   git commit -m "작업 내용 설명"
-#   git push
-
-
-
-
 import pygame #pygame 불러오기
 import webbrowser
 import sys #sys 불러오기
@@ -204,12 +172,12 @@ def play():
     start_time = datetime.now()
     play_back_button = Button(
         image=pygame.image.load("start-btn.png").convert_alpha(),
-        pos=(70, 40),
+        pos=(210, 70),
         text_input="BACK",
-        font=get_font(24),
+        font=get_font(50),
         base_color="White",
         hovering_color="Green",
-        size=(120, 40))
+        size=(350, 70))
     dt_list = []
     score = 0
     t_list = []
@@ -218,6 +186,9 @@ def play():
     global up
     global down
     up, down = False, False
+    
+    # 캐릭터 위치 초기화
+    ch.x, ch.y = 126, 400
 
     while True:
         timert = timer.get_time()
@@ -260,7 +231,8 @@ def play():
                 ch.put_img("char1.png")
         elif down == True:
             ch.y += 1
-            if ch.y >= 480 - ch.sy:
+            # 캐릭터가 전체 화면 높이까지 갈 수 있도록 수정
+            if ch.y >= height - ch.sy:
                 ch.y -= 2
             if ch.ii == "char1.png":
                 ch.put_img("char2.png")
@@ -275,8 +247,11 @@ def play():
 
         if (random.random() > 0.99) and (random.random() > 0.5):
             tr = obj()
-            tr.x = 600
-            tr.y = random.randrange(320, height - tr.sy)
+            tr.x = 1280
+            # 화면 위에서부터 2/5 지점부터 아래까지 쓰레기 생성
+            min_y = int(height * 2/5)  # 화면의 2/5 지점 (288픽셀)
+            max_y = height - 50        # 화면 아래쪽 - 50픽셀
+            tr.y = random.randrange(min_y, max_y)
             if random.random() < 0.80:  # 80% 확률로 pet.png 사용
                 tr.trash(3)
                 tr.put_img("pet.png")
@@ -288,22 +263,27 @@ def play():
 
         if (random.random() > 0.99) and (random.random() > 0.75):
             tr = obj()
-            tr.x = 600
-            tr.y = random.randrange(320, height - tr.sy)
+            tr.x = 1280
+            # 화면 위에서부터 2/5 지점부터 아래까지 쓰레기 생성
+            min_y = int(height * 2/5)  # 화면의 2/5 지점 (288픽셀)
+            max_y = height - 50        # 화면 아래쪽 - 50픽셀  
+            tr.y = random.randrange(min_y, max_y)
             tr.trash(-3)
             tr.put_img("shell.png")
             tr.move = 0.5
             t_list.append(tr)
 
-        t_list = [tr for tr in t_list if tr.y > -tr.sy]
+        # 화면 밖으로 나간 쓰레기들 제거
+        t_list = [tr for tr in t_list if tr.x > -tr.sx]
 
         screen.fill((0, 0, 0))
         screen.blit(background, (0, 0))
         font = get_font(24)
         score_text = font.render("SCORE : {}".format(score), False, (0, 0, 0))
         time_text = font.render("TIME : {}".format(ttime), False, (0, 0, 0))
-        screen.blit(score_text, (503, 20))
-        screen.blit(time_text, (500, 40))
+        # 점수와 시간 위치를 오른쪽 끝으로 이동
+        screen.blit(score_text, (width - 200, 20))
+        screen.blit(time_text, (width - 200, 40))
         title = "Plogging - Game"
 
         # 삭제할 쓰레기 객체들의 인덱스를 역순으로 정렬한 후에 삭제
@@ -344,6 +324,8 @@ def gameover():
     
     global music_time
     global music_number
+    global t_list  # 전역 t_list 선언 추가
+    
     over_back_button = Button(
         image=pygame.image.load("start-btn.png").convert_alpha(),
         pos=(340, 400),
@@ -378,6 +360,9 @@ def gameover():
     if (random.random() > 0.99):
         rank = "★"
         com = "당신은 스페셜 랭크에 당첨 되었습니다!! 축하합니다!" 
+
+    # 게임 종료 시 쓰레기 리스트 초기화
+    t_list = []
 
     while True:
         timert = timer.get_time()
