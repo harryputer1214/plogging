@@ -162,7 +162,7 @@ def main_menu():
 
         # 버튼 설정
         PLAY_BUTTON = Button(
-            image=pygame.image.load("start-btn.png").convert_alpha(),
+            image=pygame.image.load("btn.png").convert_alpha(),
             pos=(640, 350),
             text_input="PLAY",
             font=get_font(50),
@@ -170,7 +170,7 @@ def main_menu():
             hovering_color="White",
             size=(350, 70))
         TUTORIAL_BUTTON = Button(
-            image=pygame.image.load("start-btn.png").convert_alpha(),
+            image=pygame.image.load("btn.png").convert_alpha(),
             pos=(640, 450),
             text_input="TUTORIAL",
             font=get_font(45),
@@ -178,7 +178,7 @@ def main_menu():
             hovering_color="White",
             size=(350, 70))
         QUIT_BUTTON = Button(
-            image=pygame.image.load("start-btn.png").convert_alpha(),
+            image=pygame.image.load("btn.png").convert_alpha(),
             pos=(640, 550),
             text_input="QUIT",
             font=get_font(50),
@@ -188,7 +188,8 @@ def main_menu():
 
         # 타이틀 이미지 설정
         title_img = pygame.image.load("title.png").convert_alpha()
-        screen.blit(title_img, (340-120, 5))
+        title_img = pygame.transform.scale(title_img, (360, 270)) 
+        screen.blit(title_img, (640-180, 30))
 
         # 버튼 색 바꾸기
         for button in [PLAY_BUTTON, TUTORIAL_BUTTON, QUIT_BUTTON]:
@@ -245,7 +246,7 @@ def play():
 
     # 나가기 버튼
     play_back_button = Button(
-        image=pygame.image.load("start-btn.png").convert_alpha(),
+        image=pygame.image.load("play-back-btn.png").convert_alpha(),
         pos=(210, 70),
         text_input="BACK",
         font=get_font(50),
@@ -279,7 +280,7 @@ def play():
                 pygame.quit()
                 sys.exit()
 
-            # 키보드
+            # 키보드 입력
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     up = True
@@ -297,7 +298,7 @@ def play():
         if up == True:
             ch.y -= 1
             if ch.y <= 0:
-                ch.y += 2
+                ch.y += 6
             if ch.ii == "char1.png":
                 ch.put_img("char2.png")
             else:
@@ -305,7 +306,7 @@ def play():
         elif down == True:
             ch.y += 1
             if ch.y >= height - ch.sy:
-                ch.y -= 2
+                ch.y -= 6
             if ch.ii == "char1.png":
                 ch.put_img("char2.png")
             else:
@@ -358,11 +359,11 @@ def play():
         screen.blit(background, (0, 0))
 
         # 스코어/시간
-        font = get_font(24)
+        font = get_font(36)
         score_text = font.render("SCORE : {}".format(score), False, (0, 0, 0))
         time_text = font.render("TIME : {}".format(ttime), False, (0, 0, 0))
-        screen.blit(score_text, (width - 200, 20))
-        screen.blit(time_text, (width - 200, 40))
+        screen.blit(score_text, (width - 250, 35))
+        screen.blit(time_text, (width - 250, 70))
         title = "Plogging - Game"
 
         # 쓰레기 삭제
@@ -421,7 +422,7 @@ def gameover():
     
     # 돌아가기 버튼
     over_back_button = Button(
-        image=pygame.image.load("start-btn.png").convert_alpha(),
+        image=pygame.image.load("over-back-btn.png").convert_alpha(),
         pos=(340, 400),
         text_input="BACK",
         font=get_font(34),
