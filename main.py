@@ -297,7 +297,7 @@ def play():
         # 캐릭터 이동
         if up == True:
             ch.y -= 1
-            if ch.y <= 0:
+            if ch.y <= int(height * 2/5):
                 ch.y += 6
             if ch.ii == "char1.png":
                 ch.put_img("char2.png")
@@ -340,7 +340,7 @@ def play():
 
 
         # 조개 생성
-        if (random.random() > 0.99) and (random.random() > 0.75):
+        if (random.random() > 0.99) and (random.random() > 0.75) and (random.random() > 0.25):
             tr = obj()
             tr.x = 1280
             min_y = int(height * 2/5)
