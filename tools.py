@@ -1,7 +1,7 @@
 import pygame
-import sys #sys 불러오기
-import random #random 불러오기
 import time
+
+# 버튼 클래스
 class Button():
     def __init__(self, image, pos, text_input, font, base_color, hovering_color, size=(150, 50)):
         self.image = image
@@ -18,7 +18,7 @@ class Button():
         self.image = pygame.transform.scale(self.image, self.size)
         self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
         self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
-        self.hovering = False  # hovering 여부를 저장하는 변수를 추가합니다.
+        self.hovering = False 
 
     def update(self, screen):
         screen.blit(self.image, self.rect)
@@ -38,6 +38,7 @@ class Button():
         else:
             self.text = self.font.render(self.text_input, True, self.base_color)
 
+# Timer 클래스
 class Timer:
     def __init__(self):
         self.start = time.perf_counter()

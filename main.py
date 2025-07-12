@@ -166,35 +166,45 @@ def main_menu():
             pos=(640, 350),
             text_input="PLAY",
             font=get_font(50),
-            base_color="#d7fcd4",
-            hovering_color="White",
+            base_color="#ffffff",
+            hovering_color="LightGray",
             size=(350, 70))
         TUTORIAL_BUTTON = Button(
             image=pygame.image.load("btn.png").convert_alpha(),
             pos=(640, 450),
             text_input="TUTORIAL",
             font=get_font(45),
-            base_color="#d7fcd4",
-            hovering_color="White",
+            base_color="#ffffff",
+            hovering_color="LightGray",
             size=(350, 70))
         QUIT_BUTTON = Button(
             image=pygame.image.load("btn.png").convert_alpha(),
             pos=(640, 550),
             text_input="QUIT",
             font=get_font(50),
-            base_color="#d7fcd4",
-            hovering_color="White",
+            base_color="#ffffff",
+            hovering_color="LightGray",
             size=(350, 70))
 
         # 타이틀 이미지 설정
         title_img = pygame.image.load("title.png").convert_alpha()
-        title_img = pygame.transform.scale(title_img, (360, 270)) 
+        title_img = pygame.transform.scale(title_img, (360, 240)) 
         screen.blit(title_img, (640-180, 30))
 
-        # 버튼 색 바꾸기
-        for button in [PLAY_BUTTON, TUTORIAL_BUTTON, QUIT_BUTTON]:
-            button.changeColor()  
-            button.update(screen)
+        # play 버튼 색 바꾸기
+        PLAY_BUTTON.checkForInput(MENU_MOUSE_POS)
+        PLAY_BUTTON.changeColor()
+        PLAY_BUTTON.update(screen)
+
+        # tutorial 버튼 색 바꾸기
+        TUTORIAL_BUTTON.checkForInput(MENU_MOUSE_POS)
+        TUTORIAL_BUTTON.changeColor()
+        TUTORIAL_BUTTON.update(screen)
+
+        # quit 버튼 색 바꾸기
+        QUIT_BUTTON.checkForInput(MENU_MOUSE_POS)
+        QUIT_BUTTON.changeColor()
+        QUIT_BUTTON.update(screen)
         
         # 버튼 클릭 이벤트
         for event in pygame.event.get():
@@ -206,7 +216,7 @@ def main_menu():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    play()
+                    ocean()
                 if TUTORIAL_BUTTON.checkForInput(MENU_MOUSE_POS):
                     pygame.mixer.music.stop()
                     webbrowser.open("https://youtu.be/rUOzw_lKDps")
@@ -221,7 +231,7 @@ def main_menu():
         pygame.display.update()
 
 # 플레이 함수
-def play():
+def ocean():
     # 변수
     global music_time
     global music_number
@@ -251,7 +261,7 @@ def play():
         text_input="BACK",
         font=get_font(50),
         base_color="White",
-        hovering_color="Green",
+        hovering_color="LightGray",
         size=(350, 70))
     
     # 캐릭터 위치 초기화
@@ -427,7 +437,7 @@ def gameover():
         text_input="BACK",
         font=get_font(34),
         base_color="White",
-        hovering_color="Green",
+        hovering_color="LightGray",
         size=(240, 80))
 
     # 랭크 설정
