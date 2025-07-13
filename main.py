@@ -43,24 +43,24 @@ import webbrowser #webbrowser 불러오기
 import sys #sys 불러오기
 import random #random 불러오기
 import time #time 불러오기
-from tools import Button #Button 불러오기
-from tools import Timer #Timer 불러오기
+from assets.modules.tools import Button #Button 불러오기
+from assets.modules.tools import Timer #Timer 불러오기
 from datetime import datetime #datetime 불러오기
 
 #초기화
 timer = Timer()
 m_time_list = [74, 103, 79, 79, 72, 76, 73, 69] #음악 시간 설정
-m_name_list = ['Climbing High (1).mp3', 'Climbing High.mp3', 'Ocean Quest (1).mp3', 'Ocean Quest.mp3', 'Play the Game (1).mp3', 'Play the Game.mp3', 'The Game of Joy (1).mp3', 'The Game of Joy.mp3']
+m_name_list = ['assets/musics/Climbing High (1).mp3', 'assets/musics/Climbing High.mp3', 'assets/musics/Ocean Quest (1).mp3', 'assets/musics/Ocean Quest.mp3', 'assets/musics/Play the Game (1).mp3', 'assets/musics/Play the Game.mp3', 'assets/musics/The Game of Joy (1).mp3', 'assets/musics/The Game of Joy.mp3']
 music_number = random.randrange(0, 8)
 music_time = m_time_list[music_number]
-display_icon = pygame.image.load("ico.ico") 
+display_icon = pygame.image.load("assets/icons/ico.ico") 
 width, height = 1280, 720
 screen = pygame.display.set_mode((width, height)) 
-background = pygame.image.load("background.png").convert_alpha() 
-park_bg = pygame.image.load("park_bg.png").convert_alpha() 
-city_bg = pygame.image.load("city_bg.png").convert_alpha() 
-menu_bg = pygame.image.load("menu_bg.png").convert_alpha() 
-obg = pygame.image.load("over_bg.png").convert_alpha() 
+background = pygame.image.load("assets/images/backgrounds/background.png").convert_alpha() 
+park_bg = pygame.image.load("assets/images/backgrounds/park_bg.png").convert_alpha() 
+city_bg = pygame.image.load("assets/images/backgrounds/city_bg.png").convert_alpha() 
+menu_bg = pygame.image.load("assets/images/backgrounds/menu_bg.png").convert_alpha() 
+obg = pygame.image.load("assets/images/backgrounds/over_bg.png").convert_alpha() 
 title = "Plogging" 
 clock = pygame.time.Clock() 
 ttime = 60
@@ -68,7 +68,7 @@ up = False
 down = False
 
 #최고점수 작성
-f = open('highscore.txt', 'r')
+f = open('assets/highscore.txt', 'r')
 hscore_list=f.readline().split()
 f.close()
 high_score = int(hscore_list[0])
@@ -86,9 +86,9 @@ print(high_score)
 
 #get font함수
 def get_font(size): 
-    return pygame.font.Font("font.en.ttf", size)
+    return pygame.font.Font("assets/fonts/font.en.ttf", size)
 def get_font_s(size): 
-    return pygame.font.Font("font.ko.ttf", size)
+    return pygame.font.Font("assets/fonts/font.ko.ttf", size)
 
 #obj 클래스설정
 class obj:
@@ -98,10 +98,11 @@ class obj:
 
     def put_img(self, address):
         self.ii = address
+        #print(self.ii)
         if address[-3:] == "png":
             self.img = pygame.image.load(self.ii).convert_alpha()  
         else:
-            self.img = pygame.image.load("char1.png")  
+            self.img = pygame.image.load("assets/images/characters/char1.png")  
         self.sx, self.sy = self.img.get_size()  
     def change_size(self, sx, sy):
         self.img = pygame.transform.scale(self.img, (sx, sy))
@@ -112,8 +113,11 @@ class obj:
         self.ttype = type 
 
 def tuto_video():
-    # 웹 브라우저에서 튜토리얼 비디오 열기
+    pygame.mixer.music.stop()
     webbrowser.open("https://youtu.be/rUOzw_lKDps")
+    timer.restart()
+    if 30 <= timer.get_time():
+        pygame.mixer.music.play()
 
 #충돌 함수
 def crash(a, b): #a: 쓰레기, b: 캐릭터
@@ -127,7 +131,7 @@ def crash(a, b): #a: 쓰레기, b: 캐릭터
 
 #캐릭터 설정
 ch = obj()
-ch.put_img("char2.png")
+ch.put_img("assets/images/characters/char2.png")
 ch.change_size(64, 45)
 ch.x, ch.y = 126, 400
 
@@ -168,7 +172,7 @@ def main_menu():
 
         # 버튼 설정
         PLAY_BUTTON = Button(
-            image=pygame.image.load("btn.png").convert_alpha(),
+            image=pygame.image.load("assets/images/buttons/btn.png").convert_alpha(),
             pos=(640, 350),
             text_input="PLAY",
             font=get_font(50),
@@ -176,7 +180,7 @@ def main_menu():
             hovering_color="LightGray",
             size=(350, 70))
         TUTORIAL_BUTTON = Button(
-            image=pygame.image.load("btn.png").convert_alpha(),
+            image=pygame.image.load("assets/images/buttons/btn.png").convert_alpha(),
             pos=(640, 450),
             text_input="TUTORIAL",
             font=get_font(45),
@@ -184,7 +188,7 @@ def main_menu():
             hovering_color="LightGray",
             size=(350, 70))
         QUIT_BUTTON = Button(
-            image=pygame.image.load("btn.png").convert_alpha(),
+            image=pygame.image.load("assets/images/buttons/btn.png").convert_alpha(),
             pos=(640, 550),
             text_input="QUIT",
             font=get_font(50),
@@ -193,7 +197,7 @@ def main_menu():
             size=(350, 70))
 
         # 타이틀 이미지 설정
-        title_img = pygame.image.load("title.png").convert_alpha()
+        title_img = pygame.image.load("assets/images/titles/title.png").convert_alpha()
         title_img = pygame.transform.scale(title_img, (360, 240)) 
         screen.blit(title_img, (640-180, 30))
 
@@ -215,7 +219,7 @@ def main_menu():
         # 버튼 클릭 이벤트
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                f = open('highscore.txt', 'w')
+                f = open('assets/highscore.txt', 'w')
                 f.write(str(high_score))
                 f.close()
                 pygame.quit()
@@ -226,7 +230,7 @@ def main_menu():
                 if TUTORIAL_BUTTON.checkForInput(MENU_MOUSE_POS):
                     tuto_video()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    f = open('highscore.txt', 'w')
+                    f = open('assets/highscore.txt', 'w')
                     f.write(str(high_score))
                     f.close()
                     pygame.quit()
@@ -263,7 +267,7 @@ def level_menu():
 
         # 버튼 설정
         OCEAN_BUTTON = Button(
-            image=pygame.image.load("btn.png").convert_alpha(),
+            image=pygame.image.load("assets/images/buttons/btn.png").convert_alpha(),
             pos=(640, 300),
             text_input="EASY(OCEAN)",
             font=get_font(50),
@@ -272,7 +276,7 @@ def level_menu():
             size=(350, 70))
         
         PARK_BUTTON = Button(
-            image=pygame.image.load("btn.png").convert_alpha(),
+            image=pygame.image.load("assets/images/buttons/btn.png").convert_alpha(),
             pos=(640, 400),
             text_input="NORMAL(PARK)",
             font=get_font(50),
@@ -281,7 +285,7 @@ def level_menu():
             size=(350, 70))
 
         CITY_BUTTON = Button(
-            image=pygame.image.load("btn.png").convert_alpha(),
+            image=pygame.image.load("assets/images/buttons/btn.png").convert_alpha(),
             pos=(640, 500),
             text_input="HARD(CITY)",
             font=get_font(50),
@@ -290,7 +294,7 @@ def level_menu():
             size=(350, 70))
         
         LEVEL_BACK_BUTTON = Button(
-            image=pygame.image.load("btn.png").convert_alpha(),
+            image=pygame.image.load("assets/images/buttons/btn.png").convert_alpha(),
             pos=(640, 650),
             text_input="BACK",
             font=get_font(50),
@@ -299,7 +303,7 @@ def level_menu():
             size=(350, 70))
         
         # 타이틀 이미지 설정
-        select_level_img = pygame.image.load("select_level.png").convert_alpha()
+        select_level_img = pygame.image.load("assets/images/titles/select_level.png").convert_alpha()
         select_level_img = pygame.transform.scale(select_level_img, (360, 240)) 
         screen.blit(select_level_img, (640-180, 20))
 
@@ -325,7 +329,7 @@ def level_menu():
         # 버튼 클릭 이벤트
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                f = open('highscore.txt', 'w')
+                f = open('assets/highscore.txt', 'w')
                 f.write(str(high_score))
                 f.close()
                 pygame.quit()
@@ -369,7 +373,7 @@ def ocean():
 
     # 나가기 버튼
     play_back_button = Button(
-        image=pygame.image.load("play-back-btn.png").convert_alpha(),
+        image=pygame.image.load("assets/images/buttons/play-back-btn.png").convert_alpha(),
         pos=(210, 70),
         text_input="BACK",
         font=get_font(50),
@@ -397,7 +401,7 @@ def ocean():
         # x 누를 때 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                f = open('highscore.txt', 'w')
+                f = open('assets/highscore.txt', 'w')
                 f.write(str(high_score))
                 f.close()
                 pygame.quit()
@@ -429,18 +433,18 @@ def ocean():
             ch.y -= 1
             if ch.y <= int(height * 2/5):
                 ch.y += 6
-            if ch.ii == "char1.png":
-                ch.put_img("char2.png")
+            if ch.ii == "assets/images/characters/char1.png":
+                ch.put_img("assets/images/characters/char2.png")
             else:
-                ch.put_img("char1.png")
+                ch.put_img("assets/images/characters/char1.png")
         elif down == True:
             ch.y += 1
             if ch.y >= height - ch.sy:
                 ch.y -= 6
-            if ch.ii == "char1.png":
-                ch.put_img("char2.png")
+            if ch.ii == "assets/images/characters/char1.png":
+                ch.put_img("assets/images/characters/char2.png")
             else:
-                ch.put_img("char1.png")
+                ch.put_img("assets/images/characters/char1.png")
 
         # 쓰레기 충돌
         for i in range(len(t_list)):
@@ -461,10 +465,10 @@ def ocean():
             # 쓰레기 종류 설정
             if random.random() < 0.80:
                 tr.trash(3)
-                tr.put_img("pet.png")
+                tr.put_img("assets/images/trashes/pet.png")
             else:
                 tr.trash(5)
-                tr.put_img("p-bag.png")
+                tr.put_img("assets/images/trashes/p-bag.png")
             tr.move = 1
             t_list.append(tr)
 
@@ -477,7 +481,7 @@ def ocean():
             max_y = height - 50
             tr.y = random.randrange(min_y, max_y)
             tr.trash(-3)
-            tr.put_img("shell.png")
+            tr.put_img("assets/images/trashes/shell.png")
             tr.move = 0.5
             t_list.append(tr)
 
@@ -565,7 +569,7 @@ def park():
 
     # 나가기 버튼
     play_back_button = Button(
-        image=pygame.image.load("play-back-btn.png").convert_alpha(),
+        image=pygame.image.load("assets/images/buttons/play-back-btn.png").convert_alpha(),
         pos=(210, 70),
         text_input="BACK",
         font=get_font(50),
@@ -593,7 +597,7 @@ def park():
         # x 누를 때 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                f = open('highscore.txt', 'w')
+                f = open('assets/highscore.txt', 'w')
                 f.write(str(high_score))
                 f.close()
                 pygame.quit()
@@ -625,18 +629,18 @@ def park():
             ch.y -= 1.5
             if ch.y <= int(height * 2/5):
                 ch.y += 6
-            if ch.ii == "char1.png":
-                ch.put_img("char2.png")
+            if ch.ii == "assets/images/characters/char1.png":
+                ch.put_img("assets/images/characters/char2.png")
             else:
-                ch.put_img("char1.png")
+                ch.put_img("assets/images/characters/char1.png")
         elif down == True:
             ch.y += 1.5
             if ch.y >= height - ch.sy:
                 ch.y -= 6
-            if ch.ii == "char1.png":
-                ch.put_img("char2.png")
+            if ch.ii == "assets/images/characters/char1.png":
+                ch.put_img("assets/images/characters/char2.png")
             else:
-                ch.put_img("char1.png")
+                ch.put_img("assets/images/characters/char1.png")
 
         # 쓰레기 충돌
         for i in range(len(t_list)):
@@ -657,10 +661,10 @@ def park():
             # 쓰레기 종류 설정
             if random.random() < 0.75:
                 tr.trash(5)
-                tr.put_img("pet.png")
+                tr.put_img("assets/images/trashes/pet.png")
             else:
                 tr.trash(7)
-                tr.put_img("smoke.png")
+                tr.put_img("assets/images/trashes/smoke.png")
             tr.move = 2
             t_list.append(tr)
 
@@ -673,7 +677,7 @@ def park():
             max_y = height - 50
             tr.y = random.randrange(min_y, max_y)
             tr.trash(-6)
-            tr.put_img("money.png")
+            tr.put_img("assets/images/trashes/money.png")
             tr.move = 1
             t_list.append(tr)
 
@@ -761,7 +765,7 @@ def city():
 
     # 나가기 버튼
     play_back_button = Button(
-        image=pygame.image.load("play-back-btn.png").convert_alpha(),
+        image=pygame.image.load("assets/images/buttons/play-back-btn.png").convert_alpha(),
         pos=(210, 70),
         text_input="BACK",
         font=get_font(50),
@@ -789,7 +793,7 @@ def city():
         # x 누를 때 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                f = open('highscore.txt', 'w')
+                f = open('assets/highscore.txt', 'w')
                 f.write(str(high_score))
                 f.close()
                 pygame.quit()
@@ -821,18 +825,18 @@ def city():
             ch.y -= 2
             if ch.y <= int(height * 2/5):
                 ch.y += 6
-            if ch.ii == "char1.png":
-                ch.put_img("char2.png")
+            if ch.ii == "assets/images/characters/char1.png":
+                ch.put_img("assets/images/characters/char2.png")
             else:
-                ch.put_img("char1.png")
+                ch.put_img("assets/images/characters/char1.png")
         elif down == True:
             ch.y += 2
             if ch.y >= height - ch.sy:
                 ch.y -= 6
-            if ch.ii == "char1.png":
-                ch.put_img("char2.png")
+            if ch.ii == "assets/images/characters/char1.png":
+                ch.put_img("assets/images/characters/char2.png")
             else:
-                ch.put_img("char1.png")
+                ch.put_img("assets/images/characters/char1.png")
 
         # 쓰레기 충돌
         for i in range(len(t_list)):
@@ -853,10 +857,10 @@ def city():
             # 쓰레기 종류 설정
             if random.random() < 0.80:
                 tr.trash(7)
-                tr.put_img("smoke.png")
+                tr.put_img("assets/images/trashes/smoke.png")
             else:
                 tr.trash(9)
-                tr.put_img("p-cup.png")
+                tr.put_img("assets/images/trashes/p-cup.png")
             tr.move = 4
             t_list.append(tr)
 
@@ -871,10 +875,10 @@ def city():
             # no쓰레기 종류 설정
             if random.random() < 0.80:
                 tr.trash(-6)
-                tr.put_img("money.png")
+                tr.put_img("assets/images/trashes/money.png")
             else:
                 tr.trash(-8)
-                tr.put_img("cat.png")
+                tr.put_img("assets/images/trashes/cat.png")
             tr.move = 3
             t_list.append(tr)
 
@@ -949,7 +953,7 @@ def gameover():
     
     # 돌아가기 버튼
     over_back_button = Button(
-        image=pygame.image.load("over-back-btn.png").convert_alpha(),
+        image=pygame.image.load("assets/images/buttons/over-back-btn.png").convert_alpha(),
         pos=(640, 580),
         text_input="MAIN MENU",
         font=get_font(40),
@@ -1034,7 +1038,7 @@ def gameover():
         # x 누를 때
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                f = open('highscore.txt', 'w')
+                f = open('assets/highscore.txt', 'w')
                 f.write(str(high_score))
                 f.close()
                 pygame.quit()
