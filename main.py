@@ -57,6 +57,8 @@ display_icon = pygame.image.load("ico.ico")
 width, height = 1280, 720
 screen = pygame.display.set_mode((width, height)) 
 background = pygame.image.load("background.png").convert_alpha() 
+park_bg = pygame.image.load("park_bg.png").convert_alpha() 
+city_bg = pygame.image.load("city_bg.png").convert_alpha() 
 menu_bg = pygame.image.load("menu_bg.png").convert_alpha() 
 obg = pygame.image.load("over_bg.png").convert_alpha() 
 title = "Plogging" 
@@ -108,6 +110,10 @@ class obj:
         screen.blit(self.img, (self.x, self.y))   
     def trash(self, type):
         self.ttype = type 
+
+def tuto_video():
+    # 웹 브라우저에서 튜토리얼 비디오 열기
+    webbrowser.open("https://youtu.be/rUOzw_lKDps")
 
 #충돌 함수
 def crash(a, b): #a: 쓰레기, b: 캐릭터
@@ -216,11 +222,9 @@ def main_menu():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    ocean()
+                    level_menu()
                 if TUTORIAL_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    pygame.mixer.music.stop()
-                    webbrowser.open("https://youtu.be/rUOzw_lKDps")
-                    #tuto_video()
+                    tuto_video()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                     f = open('highscore.txt', 'w')
                     f.write(str(high_score))
@@ -229,6 +233,115 @@ def main_menu():
                     sys.exit()
 
         pygame.display.update()
+
+def level_menu():      
+    # 전역 변수
+    global music_time
+    global music_number
+
+    # pygame 창 이름
+    title = "Plogging - Level Menu"
+    pygame.display.set_caption(title)
+
+    while True:
+
+        # 음악 타이머
+        timert = timer.get_time()
+        if music_time <= timert:
+            timer.restart()
+            music_number = random.randrange(0, 8)
+            music_time = m_time_list[music_number]
+            pygame.mixer.init()
+            pygame.mixer.music.load(m_name_list[music_number])
+            pygame.mixer.music.play()
+
+        # 화면 설정
+        screen.blit(menu_bg, (0, 0))
+
+        # 마우스 위치
+        LEVEL_MOUSE_POS = pygame.mouse.get_pos()
+
+        # 버튼 설정
+        OCEAN_BUTTON = Button(
+            image=pygame.image.load("btn.png").convert_alpha(),
+            pos=(640, 300),
+            text_input="EASY(OCEAN)",
+            font=get_font(50),
+            base_color="#ffffff",
+            hovering_color="LightGray",
+            size=(350, 70))
+        
+        PARK_BUTTON = Button(
+            image=pygame.image.load("btn.png").convert_alpha(),
+            pos=(640, 400),
+            text_input="NORMAL(PARK)",
+            font=get_font(50),
+            base_color="#ffffff",
+            hovering_color="LightGray",
+            size=(350, 70))
+
+        CITY_BUTTON = Button(
+            image=pygame.image.load("btn.png").convert_alpha(),
+            pos=(640, 500),
+            text_input="HARD(CITY)",
+            font=get_font(50),
+            base_color="#ffffff",
+            hovering_color="LightGray",
+            size=(350, 70))
+        
+        LEVEL_BACK_BUTTON = Button(
+            image=pygame.image.load("btn.png").convert_alpha(),
+            pos=(640, 650),
+            text_input="BACK",
+            font=get_font(50),
+            base_color="#ffffff",
+            hovering_color="LightGray",
+            size=(350, 70))
+        
+        # 타이틀 이미지 설정
+        select_level_img = pygame.image.load("select_level.png").convert_alpha()
+        select_level_img = pygame.transform.scale(select_level_img, (360, 240)) 
+        screen.blit(select_level_img, (640-180, 20))
+
+        # play 버튼 색 바꾸기
+        OCEAN_BUTTON.checkForInput(LEVEL_MOUSE_POS)
+        OCEAN_BUTTON.changeColor()
+        OCEAN_BUTTON.update(screen)
+
+        # tutorial 버튼 색 바꾸기
+        PARK_BUTTON.checkForInput(LEVEL_MOUSE_POS)
+        PARK_BUTTON.changeColor()
+        PARK_BUTTON.update(screen)
+
+        # quit 버튼 색 바꾸기
+        CITY_BUTTON.checkForInput(LEVEL_MOUSE_POS)
+        CITY_BUTTON.changeColor()
+        CITY_BUTTON.update(screen)
+
+        LEVEL_BACK_BUTTON.checkForInput(LEVEL_MOUSE_POS)
+        LEVEL_BACK_BUTTON.changeColor()
+        LEVEL_BACK_BUTTON.update(screen)
+
+        # 버튼 클릭 이벤트
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                f = open('highscore.txt', 'w')
+                f.write(str(high_score))
+                f.close()
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if OCEAN_BUTTON.checkForInput(LEVEL_MOUSE_POS):
+                    ocean()
+                if PARK_BUTTON.checkForInput(LEVEL_MOUSE_POS):
+                    park()
+                if CITY_BUTTON.checkForInput(LEVEL_MOUSE_POS):
+                    city()
+                if LEVEL_BACK_BUTTON.checkForInput(LEVEL_MOUSE_POS):
+                    main_menu()
+
+        pygame.display.update()
+
 
 # 플레이 함수
 def ocean():
@@ -303,7 +416,14 @@ def ocean():
                     up = False
                 if event.key == pygame.K_DOWN:
                     down = False
-        
+
+
+            # 테스트용
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT:
+                    gameover()
+
+
         # 캐릭터 이동
         if up == True:
             ch.y -= 1
@@ -374,7 +494,7 @@ def ocean():
         time_text = font.render("TIME : {}".format(ttime), False, (0, 0, 0))
         screen.blit(score_text, (width - 250, 35))
         screen.blit(time_text, (width - 250, 70))
-        title = "Plogging - Game"
+        title = "Plogging - Play(Easy Mode)"
 
         # 쓰레기 삭제
         for dt in sorted(dt_list, reverse=True):
@@ -406,7 +526,404 @@ def ocean():
         # BACK 버튼 체크
         if play_back_button.checkForInput(play_mouse_pos):
             if pygame.mouse.get_pressed()[0]:  # 마우스 왼쪽 버튼이 클릭된 경우
-                main_menu()
+                level_menu()
+        
+        # 게임오버
+        if ttime < 0:
+            gameover()
+            wh=False
+        
+        #캐릭터 보여주기
+        ch.show()
+
+        # 화면 업데이트
+        pygame.display.update()
+        pygame.display.flip()
+
+def park():
+    # 변수
+    global music_time
+    global music_number
+    global score
+    global t_list
+    global high_score
+    global ch
+    global up
+    global down
+    global wh
+    wh=True
+    up, down = False, False
+    score = 0
+
+    # 리스트
+    dt_list = [] # 지울 쓰레기 리스트
+    t_list = [] # 쓰레기 리스트 초기화
+
+    # 시간 설정
+    ttime = 60
+    start_time = datetime.now()
+
+    # 나가기 버튼
+    play_back_button = Button(
+        image=pygame.image.load("play-back-btn.png").convert_alpha(),
+        pos=(210, 70),
+        text_input="BACK",
+        font=get_font(50),
+        base_color="White",
+        hovering_color="LightGray",
+        size=(350, 70))
+    
+    # 캐릭터 위치 초기화
+    ch.x, ch.y = 126, 400
+
+    while True:
+        # 음악 타이머
+        timert = timer.get_time()
+        if music_time <= timert:
+            timer.restart()
+            music_number = random.randrange(0, 8)
+            music_time = m_time_list[music_number]
+            pygame.mixer.init()
+            pygame.mixer.music.load(m_name_list[music_number])
+            pygame.mixer.music.play()
+
+        # 화면 설정
+        screen.blit(menu_bg, (0, 0))
+
+        # x 누를 때 
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                f = open('highscore.txt', 'w')
+                f.write(str(high_score))
+                f.close()
+                pygame.quit()
+                sys.exit()
+
+            # 키보드 입력
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    up = True
+                    #ch.put_img("char2.png")    
+                if event.key == pygame.K_DOWN:
+                    down = True
+                    #ch.put_img("char2.png")
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_UP:
+                    up = False
+                if event.key == pygame.K_DOWN:
+                    down = False
+
+
+            # 테스트용
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT:
+                    gameover()
+
+
+        # 캐릭터 이동
+        if up == True:
+            ch.y -= 1.5
+            if ch.y <= int(height * 2/5):
+                ch.y += 6
+            if ch.ii == "char1.png":
+                ch.put_img("char2.png")
+            else:
+                ch.put_img("char1.png")
+        elif down == True:
+            ch.y += 1.5
+            if ch.y >= height - ch.sy:
+                ch.y -= 6
+            if ch.ii == "char1.png":
+                ch.put_img("char2.png")
+            else:
+                ch.put_img("char1.png")
+
+        # 쓰레기 충돌
+        for i in range(len(t_list)):
+            t = t_list[i]
+            l = ch
+            if crash(t, l) and i not in dt_list: 
+                score += t_list[i].ttype
+                dt_list.append(i)
+
+        # 쓰레기 생성
+        if (random.random() > 0.99) and (random.random() > 0.25):
+            tr = obj()
+            tr.x = 1280
+            min_y = int(height * 1/2)
+            max_y = height - 50
+            tr.y = random.randrange(min_y, max_y)
+
+            # 쓰레기 종류 설정
+            if random.random() < 0.75:
+                tr.trash(5)
+                tr.put_img("pet.png")
+            else:
+                tr.trash(7)
+                tr.put_img("smoke.png")
+            tr.move = 2
+            t_list.append(tr)
+
+
+        # 돈 생성
+        if (random.random() > 0.99) and (random.random() > 0.375):
+            tr = obj()
+            tr.x = 1280
+            min_y = int(height * 1/2)
+            max_y = height - 50
+            tr.y = random.randrange(min_y, max_y)
+            tr.trash(-6)
+            tr.put_img("money.png")
+            tr.move = 1
+            t_list.append(tr)
+
+        # 나간 쓰레기 삭제
+        t_list = [tr for tr in t_list if tr.x > -tr.sx]
+
+        # 화면 설정
+        screen.fill((0, 0, 0))
+        screen.blit(park_bg, (0, 0))
+
+        # 스코어/시간
+        font = get_font(36)
+        score_text = font.render("SCORE : {}".format(score), False, (0, 0, 0))
+        time_text = font.render("TIME : {}".format(ttime), False, (0, 0, 0))
+        screen.blit(score_text, (width - 250, 35))
+        screen.blit(time_text, (width - 250, 70))
+        title = "Plogging - Game(Normal Mode)"
+
+        # 쓰레기 삭제
+        for dt in sorted(dt_list, reverse=True):
+            if dt < len(t_list):
+                del t_list[dt]
+        dt_list.clear()
+
+        # 쓰레기 이동
+        for a in t_list:
+            a.x -= a.move
+            a.show()
+
+        # pygame 창 이름 설정
+        pygame.display.set_caption(title)
+
+        #마우스 위치
+        play_mouse_pos = pygame.mouse.get_pos()
+
+        # 시간 계산
+        now_time = datetime.now()
+        delta_time = (now_time-start_time).total_seconds()
+        ttime = 60 - delta_time
+
+        # 버튼 업데이트
+        play_back_button.checkForInput(play_mouse_pos)
+        play_back_button.changeColor()
+        play_back_button.update(screen)
+
+        # BACK 버튼 체크
+        if play_back_button.checkForInput(play_mouse_pos):
+            if pygame.mouse.get_pressed()[0]:  # 마우스 왼쪽 버튼이 클릭된 경우
+                level_menu()
+        
+        # 게임오버
+        if ttime < 0:
+            gameover()
+            wh=False
+        
+        #캐릭터 보여주기
+        ch.show()
+
+        # 화면 업데이트
+        pygame.display.update()
+        pygame.display.flip()
+
+def city():
+    # 변수
+    global music_time
+    global music_number
+    global score
+    global t_list
+    global high_score
+    global ch
+    global up
+    global down
+    global wh
+    wh=True
+    up, down = False, False
+    score = 0
+
+    # 리스트
+    dt_list = [] # 지울 쓰레기 리스트
+    t_list = [] # 쓰레기 리스트 초기화
+
+    # 시간 설정
+    ttime = 60
+    start_time = datetime.now()
+
+    # 나가기 버튼
+    play_back_button = Button(
+        image=pygame.image.load("play-back-btn.png").convert_alpha(),
+        pos=(210, 70),
+        text_input="BACK",
+        font=get_font(50),
+        base_color="White",
+        hovering_color="LightGray",
+        size=(350, 70))
+    
+    # 캐릭터 위치 초기화
+    ch.x, ch.y = 126, 400
+
+    while True:
+        # 음악 타이머
+        timert = timer.get_time()
+        if music_time <= timert:
+            timer.restart()
+            music_number = random.randrange(0, 8)
+            music_time = m_time_list[music_number]
+            pygame.mixer.init()
+            pygame.mixer.music.load(m_name_list[music_number])
+            pygame.mixer.music.play()
+
+        # 화면 설정
+        screen.blit(menu_bg, (0, 0))
+
+        # x 누를 때 
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                f = open('highscore.txt', 'w')
+                f.write(str(high_score))
+                f.close()
+                pygame.quit()
+                sys.exit()
+
+            # 키보드 입력
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    up = True
+                    #ch.put_img("char2.png")    
+                if event.key == pygame.K_DOWN:
+                    down = True
+                    #ch.put_img("char2.png")
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_UP:
+                    up = False
+                if event.key == pygame.K_DOWN:
+                    down = False
+
+
+            # 테스트용
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT:
+                    gameover()
+
+
+        # 캐릭터 이동
+        if up == True:
+            ch.y -= 2
+            if ch.y <= int(height * 2/5):
+                ch.y += 6
+            if ch.ii == "char1.png":
+                ch.put_img("char2.png")
+            else:
+                ch.put_img("char1.png")
+        elif down == True:
+            ch.y += 2
+            if ch.y >= height - ch.sy:
+                ch.y -= 6
+            if ch.ii == "char1.png":
+                ch.put_img("char2.png")
+            else:
+                ch.put_img("char1.png")
+
+        # 쓰레기 충돌
+        for i in range(len(t_list)):
+            t = t_list[i]
+            l = ch
+            if crash(t, l) and i not in dt_list: 
+                score += t_list[i].ttype
+                dt_list.append(i)
+
+        # 쓰레기 생성
+        if (random.random() > 0.99) and (random.random() > 0.125):
+            tr = obj()
+            tr.x = 1280
+            min_y = int(height * 2/5)
+            max_y = height - 50
+            tr.y = random.randrange(min_y, max_y)
+
+            # 쓰레기 종류 설정
+            if random.random() < 0.80:
+                tr.trash(7)
+                tr.put_img("smoke.png")
+            else:
+                tr.trash(9)
+                tr.put_img("p-cup.png")
+            tr.move = 4
+            t_list.append(tr)
+
+
+        # no쓰레기 생성
+        if (random.random() > 0.99) and (random.random() > 0.25) :
+            tr = obj()
+            tr.x = 1280
+            min_y = int(height * 2/5)
+            max_y = height - 50
+            tr.y = random.randrange(min_y, max_y)
+            # no쓰레기 종류 설정
+            if random.random() < 0.80:
+                tr.trash(-6)
+                tr.put_img("money.png")
+            else:
+                tr.trash(-8)
+                tr.put_img("cat.png")
+            tr.move = 3
+            t_list.append(tr)
+
+        # 나간 쓰레기 삭제
+        t_list = [tr for tr in t_list if tr.x > -tr.sx]
+
+        # 화면 설정
+        screen.fill((0, 0, 0))
+        screen.blit(city_bg, (0, 0))
+
+        # 스코어/시간
+        font = get_font(36)
+        score_text = font.render("SCORE : {}".format(score), False, (0, 0, 0))
+        time_text = font.render("TIME : {}".format(ttime), False, (0, 0, 0))
+        screen.blit(score_text, (width - 250, 35))
+        screen.blit(time_text, (width - 250, 70))
+        title = "Plogging - Game(Hard Mode)"
+
+        # 쓰레기 삭제
+        for dt in sorted(dt_list, reverse=True):
+            if dt < len(t_list):
+                del t_list[dt]
+        dt_list.clear()
+
+        # 쓰레기 이동
+        for a in t_list:
+            a.x -= a.move
+            a.show()
+
+        # pygame 창 이름 설정
+        pygame.display.set_caption(title)
+
+        #마우스 위치
+        play_mouse_pos = pygame.mouse.get_pos()
+
+        # 시간 계산
+        now_time = datetime.now()
+        delta_time = (now_time-start_time).total_seconds()
+        ttime = 60 - delta_time
+
+        # 버튼 업데이트
+        play_back_button.checkForInput(play_mouse_pos)
+        play_back_button.changeColor()
+        play_back_button.update(screen)
+
+        # BACK 버튼 체크
+        if play_back_button.checkForInput(play_mouse_pos):
+            if pygame.mouse.get_pressed()[0]:  # 마우스 왼쪽 버튼이 클릭된 경우
+                level_menu()
         
         # 게임오버
         if ttime < 0:
@@ -433,9 +950,9 @@ def gameover():
     # 돌아가기 버튼
     over_back_button = Button(
         image=pygame.image.load("over-back-btn.png").convert_alpha(),
-        pos=(340, 400),
-        text_input="BACK",
-        font=get_font(34),
+        pos=(640, 580),
+        text_input="MAIN MENU",
+        font=get_font(40),
         base_color="White",
         hovering_color="LightGray",
         size=(240, 80))
@@ -445,23 +962,23 @@ def gameover():
         high_score = score
     if score >= 250:
         rank = "S"
-        com = "멋져요! 훌륭한 해변 정리자! 깨끗한 해변은 누구나의 꿈입니다!"
+        com = "멋져요! 훌륭한 거리 정리자! 깨끗한 거리는 누구나의 꿈입니다!"
     elif score >= 200:
         rank = "A"
-        com = "수고했어요! 해변에 친환경적으로 기여한 모습이 멋지네요!"
+        com = "수고했어요! 거리에 친환경적으로 기여한 모습이 멋지네요!"
     elif score >= 150:
         rank = "B"
-        com = "해변의 미래를 함께 만들어나가요! 더 많은 쓰레기를 주워봅시다!"
+        com = "꺠끗한 거리를 함께 만들어나가요! 더 많은 쓰레기를 주워봅시다!"
     elif score >= 100:
         rank = "C"
-        com = "노력은 했지만! 하지만 아직 해변에 더 많은 쓰레기가 남아있어요."
+        com = "노력은 했지만! 하지만 아직 거리에 더 많은 쓰레기가 남아있어요."
     else:
         rank = "D"
-        com = "조금만 더 힘을 내요! 아직 해변 정리에는 부족해요. 계속 도전하세요!"
+        com = "조금만 더 힘을 내요! 아직 거리 정리에는 부족해요. 계속 도전하세요!"
 
     if (random.random() > 0.99):
         rank = "★"
-        com = "당신은 스페셜 랭크에 당첨 되었습니다!! 축하합니다!" 
+        com = "와우! 당신은 거리 정리의 슈퍼스타입니다! (스페셜 랭크)" 
 
     # 쓰레기 리스트 초기화
     t_list = []
@@ -484,25 +1001,25 @@ def gameover():
         screen.blit(obg, (0, 0))
 
         #폰트/글씨
-        font_big = get_font(79)
-        font_small = get_font_s(20)
+        font_big = get_font(256)
+        font_small = get_font_s(36)
         font = get_font(39)
 
         # 랭크 글씨
         rank_t = font_big.render("{}".format(rank), False, (0, 0, 0))
-        screen.blit(rank_t, (425, 50))
+        screen.blit(rank_t, (960, 100))
 
         # 점수 글씨
         score_t = font.render("{}".format(score), False, (0, 0, 0))
-        screen.blit(score_t, (225, 115))
+        screen.blit(score_t, (300, 205))
 
         # 최고 점수 글씨
         score_t = font.render("{}".format(high_score), False, (0, 0, 0))
-        screen.blit(score_t, (300, 170))
+        screen.blit(score_t, (410, 265))
 
         # 코멘트 글씨
         com_t = font_small.render("{}".format(com), False, (0, 0, 0))
-        screen.blit(com_t, (30, 250))
+        screen.blit(com_t, (100, 400))
 
         # 버튼 업데이트
         over_back_button.checkForInput(over_mouse_pos)
