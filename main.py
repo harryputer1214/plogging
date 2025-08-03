@@ -115,9 +115,7 @@ class obj:
 def tuto_video():
     pygame.mixer.music.stop()
     webbrowser.open("https://youtu.be/rUOzw_lKDps")
-    timer.restart()
-    if 30 <= timer.get_time():
-        pygame.mixer.music.play()
+    pygame.mixer.music.play()
 
 #충돌 함수
 def crash(a, b): #a: 쓰레기, b: 캐릭터
