@@ -221,7 +221,7 @@ def tutorial():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
+                if BACK_BUTTON.checkForInput(MENU_MOUSE_POS):
                     main_menu()
                 if PERV_BUTTON.checkForInput(MENU_MOUSE_POS):
                     tuto_img_num -= 1
