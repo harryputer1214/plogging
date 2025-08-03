@@ -66,6 +66,7 @@ clock = pygame.time.Clock()
 ttime = 60
 up = False
 down = False
+tuto_img = ['assets/images/tutorials/1.png', 'assets/images/tutorials/2.png', 'assets/images/tutorials/3.png']
 
 #최고점수 작성
 f = open('assets/highscore.txt', 'r')
@@ -139,6 +140,94 @@ pygame.mixer.music.play()  # 초기 음악 재생
 
 # 타이머 초기화
 timer.restart()
+
+def tutorial(): 
+    # 전역 변수
+    global music_time
+    global music_number
+
+    # pygame 창 이름
+    title = "Plogging - Tutorial"
+    pygame.display.set_caption(title)
+
+    # 변수 리셋
+    tuto_img_num = 0
+
+    while True:
+
+        # 음악 타이머
+        timert = timer.get_time()
+        if music_time <= timert:
+            timer.restart()
+            music_number = random.randrange(0, 8)
+            music_time = m_time_list[music_number]
+            pygame.mixer.init()
+            pygame.mixer.music.load(m_name_list[music_number])
+            pygame.mixer.music.play()
+
+        # 화면 설정
+        screen.blit(tuto_img[tuto_img_num], (0, 0))
+
+        # 마우스 위치
+        MENU_MOUSE_POS = pygame.mouse.get_pos()
+
+        # 버튼 설정
+        BACK_BUTTON = Button(
+            image=pygame.image.load("assets/images/buttons/btn.png").convert_alpha(),
+            pos=(640, 350),
+            text_input="BACK",
+            font=get_font(50),
+            base_color="#ffffff",
+            hovering_color="LightGray",
+            size=(350, 70))
+        PERV_BUTTON = Button(
+            image=pygame.image.load("assets/images/buttons/perv.png").convert_alpha(),
+            pos=(640, 450),
+            text_input="",
+            font=get_font(45),
+            base_color="#ffffff",
+            hovering_color="LightGray",
+            size=(70, 70))
+        NEXT_BUTTON = Button(
+            image=pygame.image.load("assets/images/buttons/next.png").convert_alpha(),
+            pos=(640, 550),
+            text_input="",
+            font=get_font(50),
+            base_color="#ffffff",
+            hovering_color="LightGray",
+            size=(70, 70))
+
+        # BACK_BUTTON 버튼 색 바꾸기
+        BACK_BUTTON.checkForInput(MENU_MOUSE_POS)
+        BACK_BUTTON.changeColor()
+        BACK_BUTTON.update(screen)
+
+        # PERV_BUTTON 버튼 색 바꾸기
+        PERV_BUTTON.checkForInput(MENU_MOUSE_POS)
+        PERV_BUTTON.changeColor()
+        PERV_BUTTON.update(screen)
+
+        # NEXT_BUTTON 버튼 색 바꾸기
+        NEXT_BUTTON.checkForInput(MENU_MOUSE_POS)
+        NEXT_BUTTON.changeColor()
+        NEXT_BUTTON.update(screen)
+        
+        # 버튼 클릭 이벤트
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                f = open('assets/highscore.txt', 'w')
+                f.write(str(high_score))
+                f.close()
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    main_menu()
+                if PERV_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    tuto_img_num -= 1
+                if NEXT_BUTTON.checkForInput(MENU_MOUSE_POS):\
+                    tuto_img_num += 1
+        pygame.display.update()
 
 #메뉴 함수
 def main_menu():      
