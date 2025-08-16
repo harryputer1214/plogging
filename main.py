@@ -66,7 +66,7 @@ clock = pygame.time.Clock()
 ttime = 60
 up = False
 down = False
-tuto_img = ['assets/images/tutorials/1.png', 'assets/images/tutorials/2.png', 'assets/images/tutorials/3.png']
+tuto_img = ['assets/images/tutorials/1.png', 'assets/images/tutorials/2.png', 'assets/images/tutorials/3.png', 'assets/images/tutorials/4.png', 'assets/images/tutorials/5.png', 'assets/images/tutorials/6.png', 'assets/images/tutorials/7.png', 'assets/images/tutorials/8.png', 'assets/images/tutorials/9.png']
 
 #최고점수 작성
 f = open('assets/highscore.txt', 'r')
@@ -315,7 +315,7 @@ def main_menu():
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                     level_menu()
                 if TUTORIAL_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    tuto_video()
+                    tutorial()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                     f = open('assets/highscore.txt', 'w')
                     f.write(str(high_score))
