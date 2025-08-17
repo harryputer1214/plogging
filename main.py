@@ -66,7 +66,7 @@ clock = pygame.time.Clock()
 ttime = 60
 up = False
 down = False
-tuto_img = ['assets/images/tutorials/1.png', 'assets/images/tutorials/2.png', 'assets/images/tutorials/3.png', 'assets/images/tutorials/4.png', 'assets/images/tutorials/5.png', 'assets/images/tutorials/6.png', 'assets/images/tutorials/7.png', 'assets/images/tutorials/8.png', 'assets/images/tutorials/9.png']
+tuto_img = ['assets/images/tutorials/1.jpg', 'assets/images/tutorials/2.jpg', 'assets/images/tutorials/3.jpg', 'assets/images/tutorials/4.jpg', 'assets/images/tutorials/5.jpg', 'assets/images/tutorials/6.jpg', 'assets/images/tutorials/7.jpg', 'assets/images/tutorials/8.jpg', 'assets/images/tutorials/9.jpg']
 
 #최고점수 작성
 f = open('assets/highscore.txt', 'r')
@@ -166,23 +166,24 @@ def tutorial():
             pygame.mixer.music.play()
 
         # 화면 설정
-        screen.blit(tuto_img[tuto_img_num], (0, 0))
+        tuto_img_file = pygame.image.load(tuto_img[tuto_img_num])
+        screen.blit(tuto_img_file, (0, 0))
 
         # 마우스 위치
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
         # 버튼 설정
         BACK_BUTTON = Button(
-            image=pygame.image.load("assets/images/buttons/btn.png").convert_alpha(),
-            pos=(640, 350),
-            text_input="BACK",
+            image=pygame.image.load("assets/images/buttons/exit.png").convert_alpha(),
+            pos=(1220, 60),
+            text_input="",
             font=get_font(50),
             base_color="#ffffff",
             hovering_color="LightGray",
-            size=(350, 70))
+            size=(70, 70))
         PERV_BUTTON = Button(
             image=pygame.image.load("assets/images/buttons/perv.png").convert_alpha(),
-            pos=(640, 450),
+            pos=(70, 660),
             text_input="",
             font=get_font(45),
             base_color="#ffffff",
@@ -190,7 +191,7 @@ def tutorial():
             size=(70, 70))
         NEXT_BUTTON = Button(
             image=pygame.image.load("assets/images/buttons/next.png").convert_alpha(),
-            pos=(640, 550),
+            pos=(1210, 660),
             text_input="",
             font=get_font(50),
             base_color="#ffffff",
@@ -227,6 +228,12 @@ def tutorial():
                     tuto_img_num -= 1
                 if NEXT_BUTTON.checkForInput(MENU_MOUSE_POS):\
                     tuto_img_num += 1
+
+        if tuto_img_num < 0:
+            tuto_img_num = 0
+        if tuto_img_num >= len(tuto_img):
+            tuto_img_num = len(tuto_img) - 1
+
         pygame.display.update()
 
 #메뉴 함수
