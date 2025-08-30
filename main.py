@@ -46,6 +46,7 @@ import time #time 불러오기
 from assets.modules.tools import Button #Button 불러오기
 from assets.modules.tools import Timer #Timer 불러오기
 from datetime import datetime #datetime 불러오기
+import math #math 불러오기
 
 #초기화
 timer = Timer()
@@ -66,6 +67,8 @@ clock = pygame.time.Clock()
 ttime = 60
 up = False
 down = False
+sound_volume = 1.0
+fps = 60
 tuto_img = ['assets/images/tutorials/1.jpg', 'assets/images/tutorials/2.jpg', 'assets/images/tutorials/3.jpg', 'assets/images/tutorials/4.jpg', 'assets/images/tutorials/5.jpg', 'assets/images/tutorials/6.jpg', 'assets/images/tutorials/7.jpg', 'assets/images/tutorials/8.jpg', 'assets/images/tutorials/9.jpg']
 
 #최고점수 작성
@@ -74,6 +77,16 @@ hscore_list=f.readline().split()
 f.close()
 high_score = int(hscore_list[0])
 
+fps_file = open('assets/fps.txt', 'r')
+fps_f_list = fps_file.readline().split()
+fps_file.close()
+fps = int(fps_f_list[0])
+
+volume_file = open('assets/volume.txt', 'r')
+volume_f_list = volume_file.readline().split()
+volume_file.close()
+sound_volume = float(volume_f_list[0])
+
 #pygame 초기화
 pygame.mixer.init() 
 pygame.mixer.music.load(m_name_list[music_number])
@@ -81,6 +94,7 @@ pygame.init()
 pygame.display.set_icon(display_icon)
 pygame.display.set_caption(title)
 main_font = pygame.font.SysFont("cambria", 50)
+pygame.mixer.music.set_volume(sound_volume)
 
 #최고점수 출력
 print(high_score)
@@ -115,7 +129,7 @@ class obj:
 
 def tuto_video():
     pygame.mixer.music.stop()
-    webbrowser.open("https://youtu.be/rUOzw_lKDps")
+    webbrowser.open("https://youtu.be/dQw4w9WgXcQ")
     pygame.mixer.music.play()
 
 #충돌 함수
@@ -142,6 +156,7 @@ pygame.mixer.music.play()  # 초기 음악 재생
 timer.restart()
 
 def tutorial(): 
+    global fps
     # 전역 변수
     global music_time
     global music_number
@@ -234,10 +249,12 @@ def tutorial():
         if tuto_img_num >= len(tuto_img):
             tuto_img_num = len(tuto_img) - 1
 
+        clock.tick(fps)
         pygame.display.update()
 
 #메뉴 함수
-def main_menu():      
+def main_menu():  
+    global fps 
     # 전역 변수
     global music_time
     global music_number
@@ -289,6 +306,14 @@ def main_menu():
             base_color="#ffffff",
             hovering_color="LightGray",
             size=(350, 70))
+        SETTINGS_BUTTON = Button(
+            image=pygame.image.load("assets/images/buttons/settings-btn.png").convert_alpha(),
+            pos=(1210, 70),
+            text_input="",
+            font=get_font(50),
+            base_color="#ffffff",
+            hovering_color="LightGray",
+            size=(70, 70))
 
         # 타이틀 이미지 설정
         title_img = pygame.image.load("assets/images/titles/title.png").convert_alpha()
@@ -309,7 +334,11 @@ def main_menu():
         QUIT_BUTTON.checkForInput(MENU_MOUSE_POS)
         QUIT_BUTTON.changeColor()
         QUIT_BUTTON.update(screen)
-        
+
+        SETTINGS_BUTTON.checkForInput(MENU_MOUSE_POS)
+        SETTINGS_BUTTON.changeColor()
+        SETTINGS_BUTTON.update(screen)
+
         # 버튼 클릭 이벤트
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -329,10 +358,186 @@ def main_menu():
                     f.close()
                     pygame.quit()
                     sys.exit()
+                if SETTINGS_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    settings_menu()
+
+        clock.tick(fps)
+        pygame.display.update()
+
+def settings_menu():      
+    # 전역 변수
+    global music_time
+    global music_number
+    global sound_volume
+    global fps
+    global fps
+
+    # pygame 창 이름
+    title = "Plogging - Settings Menu"
+    pygame.display.set_caption(title)
+
+    while True:
+
+        # 음악 타이머
+        pygame.mixer.music.set_volume(sound_volume)
+        timert = timer.get_time()
+        if music_time <= timert:
+            timer.restart()
+            music_number = random.randrange(0, 8)
+            music_time = m_time_list[music_number]
+            pygame.mixer.init()
+            pygame.mixer.music.load(m_name_list[music_number])
+            pygame.mixer.music.play()
+
+        # 화면 설정
+        screen.blit(menu_bg, (0, 0))
+
+        # 마우스 위치
+        MENU_MOUSE_POS = pygame.mouse.get_pos()
+
+        # 버튼 설정
+        VOLUMEUP_BUTTON = Button(
+            image=pygame.image.load("assets/images/buttons/squre-btn.png").convert_alpha(),
+            pos=(780, 325),
+            text_input="+",
+            font=get_font(50),
+            base_color="#ffffff",
+            hovering_color="LightGray",
+            size=(70, 70))
+        VOLUMEDOWN_BUTTON = Button(
+            image=pygame.image.load("assets/images/buttons/squre-btn.png").convert_alpha(),
+            pos=(500, 325),
+            text_input="-",
+            font=get_font(45),
+            base_color="#ffffff",
+            hovering_color="LightGray",
+            size=(70, 70))
+        FPSUP_BUTTON = Button(
+            image=pygame.image.load("assets/images/buttons/squre-btn.png").convert_alpha(),
+            pos=(780, 425),
+            text_input="+",
+            font=get_font(50),
+            base_color="#ffffff",
+            hovering_color="LightGray",
+            size=(70, 70))
+        FPSDOWN_BUTTON = Button(
+            image=pygame.image.load("assets/images/buttons/squre-btn.png").convert_alpha(),
+            pos=(500, 425),
+            text_input="-",
+            font=get_font(45),
+            base_color="#ffffff",
+            hovering_color="LightGray",
+            size=(70, 70))
+        BACK_BUTTON = Button(
+            image=pygame.image.load("assets/images/buttons/btn.png").convert_alpha(),
+            pos=(640, 550),
+            text_input="BACK",
+            font=get_font(50),
+            base_color="#ffffff",
+            hovering_color="LightGray",
+            size=(350, 70))
+
+        # 타이틀 이미지 설정
+        title_img = pygame.image.load("assets/images/titles/settings.png").convert_alpha()
+        title_img = pygame.transform.scale(title_img, (360, 240)) 
+        screen.blit(title_img, (640-180, 30))
+
+        # volume up 버튼 색 바꾸기
+        VOLUMEUP_BUTTON.checkForInput(MENU_MOUSE_POS)
+        VOLUMEUP_BUTTON.changeColor()
+        VOLUMEUP_BUTTON.update(screen)
+
+        # volume down 버튼 색 바꾸기
+        VOLUMEDOWN_BUTTON.checkForInput(MENU_MOUSE_POS)
+        VOLUMEDOWN_BUTTON.changeColor()
+        VOLUMEDOWN_BUTTON.update(screen)
+
+        # back 버튼 색 바꾸기
+        BACK_BUTTON.checkForInput(MENU_MOUSE_POS)
+        BACK_BUTTON.changeColor()
+        BACK_BUTTON.update(screen)
+
+        # fps up 버튼 색 바꾸기
+        FPSUP_BUTTON.checkForInput(MENU_MOUSE_POS)
+        FPSUP_BUTTON.changeColor()
+        FPSUP_BUTTON.update(screen)
+
+        FPSDOWN_BUTTON.checkForInput(MENU_MOUSE_POS)
+        FPSDOWN_BUTTON.changeColor()
+        FPSDOWN_BUTTON.update(screen)
+
+        # 버튼 클릭 이벤트
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                f = open('assets/highscore.txt', 'w')
+                f.write(str(high_score))
+                f.close()
+                volume_file = open('assets/volume.txt', 'w')
+                volume_file.write(str(sound_volume))
+                volume_file.close()
+                fps_file = open('assets/fps.txt', 'w')
+                fps_file.write(str(fps))
+                fps_file.close()
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if VOLUMEUP_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    sound_volume += 0.05
+                if VOLUMEDOWN_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    sound_volume -= 0.05
+                if BACK_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    volume_file = open('assets/volume.txt', 'w')
+                    volume_file.write(str(sound_volume))
+                    volume_file.close()
+                    fps_file = open('assets/fps.txt', 'w')
+                    fps_file.write(str(fps))
+                    fps_file.close()
+                    main_menu()
+                if FPSUP_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    fps += 1
+                if FPSDOWN_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    fps -= 1
+
+        font = get_font(50)
+        volume_show = math.ceil(sound_volume * 100)
+
+        if sound_volume > 1.0:
+            sound_volume = 1.0
+        if sound_volume < 0.0:
+            sound_volume = 0.0
+
+        if volume_show == 100:
+            volume_x = 605
+        else:
+            volume_x = 615
+
+        volume_text = font.render("{}".format(volume_show), False, (0, 0, 0))
+        screen.blit(volume_text, (volume_x, 300))
+
+        volume_title = get_font(40).render("VOLUME", False, (0, 0, 0))
+        screen.blit(volume_title, (585, 260))
+
+        clock.tick(fps)
+        if fps > 120:
+            fps = 120
+        if fps < 1:
+            fps = 1
+
+        if fps >= 100:
+            fps_x = 605
+        else:
+            fps_x = 615
+
+        fps_text = font.render("{}".format(fps), False, (0, 0, 0))
+        screen.blit(fps_text, (fps_x, 400))
+
+        fps_title = get_font(40).render("FPS", False, (0, 0, 0))
+        screen.blit(fps_title, (615, 360))
 
         pygame.display.update()
 
-def level_menu():      
+def level_menu():    
+    global fps
     # 전역 변수
     global music_time
     global music_number
@@ -438,11 +643,13 @@ def level_menu():
                 if LEVEL_BACK_BUTTON.checkForInput(LEVEL_MOUSE_POS):
                     main_menu()
 
+        clock.tick(fps)
         pygame.display.update()
 
 
 # 플레이 함수
 def ocean():
+    global fps
     # 변수
     global music_time
     global music_number
@@ -514,13 +721,6 @@ def ocean():
                     up = False
                 if event.key == pygame.K_DOWN:
                     down = False
-
-
-            # 테스트용
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT:
-                    gameover()
-
 
         # 캐릭터 이동
         if up == True:
@@ -635,10 +835,12 @@ def ocean():
         ch.show()
 
         # 화면 업데이트
+        clock.tick(fps)
         pygame.display.update()
         pygame.display.flip()
 
 def park():
+    global fps
     # 변수
     global music_time
     global music_number
@@ -710,13 +912,6 @@ def park():
                     up = False
                 if event.key == pygame.K_DOWN:
                     down = False
-
-
-            # 테스트용
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT:
-                    gameover()
-
 
         # 캐릭터 이동
         if up == True:
@@ -831,10 +1026,12 @@ def park():
         ch.show()
 
         # 화면 업데이트
+        clock.tick(fps)
         pygame.display.update()
         pygame.display.flip()
 
 def city():
+    global fps
     # 변수
     global music_time
     global music_number
@@ -906,13 +1103,6 @@ def city():
                     up = False
                 if event.key == pygame.K_DOWN:
                     down = False
-
-
-            # 테스트용
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT:
-                    gameover()
-
 
         # 캐릭터 이동
         if up == True:
@@ -1032,11 +1222,13 @@ def city():
         ch.show()
 
         # 화면 업데이트
+        clock.tick(fps)
         pygame.display.update()
         pygame.display.flip()
 
 # 게임 오버 함수
 def gameover():
+    global fps
     # 변수
     global music_time
     global music_number
@@ -1139,6 +1331,7 @@ def gameover():
                 sys.exit()
             
         # 화면 업데이트
+        clock.tick(fps)
         pygame.display.update()
         pygame.display.flip()
 
